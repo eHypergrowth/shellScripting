@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Ruta del directorio actual
+DIR_PATH="$PWD"
+
 # Función para verificar si un paquete está instalado
 check_package() {
   dpkg -l $1 &> /dev/null
@@ -53,45 +56,31 @@ if [ ! -d "/root/.sdkman" ]; then
   source "/root/.sdkman/bin/sdkman-init.sh"
 fi
 
-# Solicitar el nombre del proyecto de Angular
-read -p "Ingrese el nombre del proyecto de Angular: " angular_project
+# Detectar el lenguaje seleccionado
+if [ "$1" == "angular" ]; then
+  # Solicitar el nombre del proyecto de Angular
+  read -p "Ingrese el nombre del proyecto de Angular: " angular_project
 
-# Crear la aplicación de Angular
-npm install -g @angular/cli
+  # Crear la aplicación de Angular
+  npm install -g @angular/cli
 
-# Verificar si el directorio Angular ya existe
-if ! check_directory "Angular"; then
-  mkdir Angular
+  cd "$DIR_PATH"
+
+  # Verificar si el directorio del proyecto Angular ya existe
+  if ! check_directory "$angular_project"; then
+    ng new $angular_project
+	ng server
+  fi
+elif [ "$1" == "spring" ]; then
+  # Solicitar el nombre del proyecto de Spring Boot
+  read -p "Ingrese el nombre del proyecto de Spring Boot: " spring_project
+
+  cd "$DIR_PATH"
+
+  # Verificar si el directorio del proyecto Spring Boot ya existe
+  if ! check_directory "$spring_project"; then
+    spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
+  fi
+else
+  echo "Lenguaje no reconocido. Use 'angular' o 'spring' como parámetro."
 fi
-
-cd Angular
-
-# Verificar si el directorio del proyecto Angular ya existe
-if ! check_directory "$angular_project"; then
-  ng new $angular_project
-fi
-
-cd ..
-
-
-# Crear la aplicación de Spring Boot con Spring Boot CLI
-
-# Verificar si el directorio SpringBoot ya existe
-if ! check_directory "SpringBoot"; then
-  mkdir SpringBoot
-fi
-cd SpringBoot
-read -p "Ingrese el nombre del proyecto de Spring Boot: " spring_project
-# Verificar si el directorio del proyecto Spring Boot ya existe
-if ! check_directory "$spring_project"; then
-  spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
-fi
-
-cd ..
-
-# Mensaje final
-cd Angular
-cd $angular_project
-ng server
-echo "El servidor de desarrollo se ha configurado correctamente. La aplicación de Angular se está ejecutando en http://localhost:4200."
-
