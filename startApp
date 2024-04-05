@@ -52,13 +52,18 @@ read -p "Ingrese el nombre del proyecto de Angular: " angular_project
 
 # Crear la aplicación de Angular
 npm install -g @angular/cli
+mkdir Angular
+cd Angular
 ng new $angular_project
-
+cd ..
 # Crear la aplicación de Spring Boot con Spring Boot CLI
+mkdir SpringBoot
 read -p "Ingrese el nombre del proyecto de Spring Boot: " spring_project
 spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
+cd ..
 
 # Mensaje final
+cd Angular
 cd $angular_project
 ng server
 echo "El servidor de desarrollo se ha configurado correctamente. La aplicación de Angular se está ejecutando en http://localhost:4200."
