@@ -1,0 +1,99 @@
+#!/bin/bash
+
+# Función para verificar si un paquete está instalado
+check_package() {
+  dpkg -l $1 &> /dev/null
+  return $?
+}
+
+# Variable de control
+instalado=0
+
+# Verificar si git está instalado
+if ! check_package git; then
+  apt update
+  apt install -y git
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si zip está instalado
+if ! check_package zip; then
+  apt update
+  apt install -y zip
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si unzip está instalado
+if ! check_package unzip; then
+  apt update
+  apt install -y unzip
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si curl está instalado
+if ! check_package curl; then
+  apt update
+  apt install -y curl
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si Node.js está instalado
+if ! check_package nodejs; then
+  curl -sL https://deb.nodesource.com/setup_20.x | bash -
+  apt install -y nodejs
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si Angular CLI está instalado
+if ! command -v ng &> /dev/null; then
+  npm install -g @angular/cli
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si Maven está instalado
+if ! command -v mvn &> /dev/null; then
+  wget https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz
+  tar xf apache-maven-3.8.7-bin.tar.gz -C /opt
+  echo 'export M2_HOME=/opt/apache-maven-3.8.7' >> ~/.bashrc
+  echo 'export M2=$M2_HOME/bin' >> ~/.bashrc
+  echo 'export PATH=$M2:$PATH' >> ~/.bashrc
+  source ~/.bashrc
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si Spring Boot CLI está instalado
+if ! command -v spring &> /dev/null; then
+  curl https://start.spring.io/install.sh | bash
+  source ~/.bashrc
+else
+  instalado=$((instalado+1))
+fi
+
+# Verificar si todo está instalado
+if [ $instalado -eq 7 ]; then
+  # Solicitar el nombre del proyecto de Angular
+  read -p "Ingrese el nombre del proyecto de Angular: " angular_project
+
+  # Crear la aplicación de Angular
+  ng new $angular_project
+t
+
+  # Crear la aplicación de Spring Boot con Spring Boot CLI
+  read -p "Ingrese el nombre del proyecto de Spring Boot: " spring_project
+  spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
+
+  # Mensaje final
+  cd $angular_projec
+  ng serve
+  echo "El servidor de desarrollo se ha configurado correctamente. La aplicación de Angular se está ejecutando en http://localhost:4200."
+else
+  echo "No se han instalado todas las dependencias necesarias."
+fi
+
