@@ -6,6 +6,12 @@ check_package() {
   return $?
 }
 
+# Función para verificar si un directorio existe
+check_directory() {
+  [ -d "$1" ]
+  return $?
+}
+
 # Verificar si git está instalado
 if ! check_package git; then
   apt update
@@ -52,14 +58,35 @@ read -p "Ingrese el nombre del proyecto de Angular: " angular_project
 
 # Crear la aplicación de Angular
 npm install -g @angular/cli
-mkdir Angular
+
+# Verificar si el directorio Angular ya existe
+if ! check_directory "Angular"; then
+  mkdir Angular
+fi
+
 cd Angular
-ng new $angular_project
+
+# Verificar si el directorio del proyecto Angular ya existe
+if ! check_directory "$angular_project"; then
+  ng new $angular_project
+fi
+
 cd ..
+
+
 # Crear la aplicación de Spring Boot con Spring Boot CLI
-mkdir SpringBoot
+
+# Verificar si el directorio SpringBoot ya existe
+if ! check_directory "SpringBoot"; then
+  mkdir SpringBoot
+fi
+cd SpringBoot
 read -p "Ingrese el nombre del proyecto de Spring Boot: " spring_project
-spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
+# Verificar si el directorio del proyecto Spring Boot ya existe
+if ! check_directory "$spring_project"; then
+  spring init --build=maven --java=17 --dependencies=web,devtools,data-jpa,actuator,mariadb,lombok --version=2.3.2.RELEASE --name=$spring_project $spring_project
+fi
+
 cd ..
 
 # Mensaje final
