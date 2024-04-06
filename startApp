@@ -70,7 +70,7 @@ if [ "$1" == "angular" ]; then
   if ! check_directory "$angular_project"; then
     ng new $angular_project
 	cd $angular_project
-	ng serve
+	ng serve --host=0.0.0.0 --port=4200
   fi
 elif [ "$1" == "spring" ]; then
   # Solicitar el nombre del proyecto de Spring Boot
