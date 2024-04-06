@@ -69,6 +69,7 @@ if [ "$1" == "angular" ]; then
   # Verificar si el directorio del proyecto Angular ya existe
   if ! check_directory "$angular_project"; then
     ng new $angular_project
+	cd $angular_project
 	ng server
   fi
 elif [ "$1" == "spring" ]; then
