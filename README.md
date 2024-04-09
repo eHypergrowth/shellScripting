@@ -13,9 +13,10 @@ Abre un terminal y navega hasta el directorio donde has clonado el repositorio.
 Ejecuta el script startApp con el siguiente formato:
 
 bash
-Copy code
-./startApp [lenguaje]
-Donde [lenguaje] puede ser angular o spring dependiendo de si deseas crear un proyecto de Angular o Spring Boot.
+
+ ./startApp [lenguaje] 
+
+Donde [lenguaje] puede ser (angular o spring) dependiendo de si deseas crear un proyecto de Angular o Spring Boot.
 
 Sigue las instrucciones en pantalla para ingresar el nombre del proyecto y completar la inicialización.
 
